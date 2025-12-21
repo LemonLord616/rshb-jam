@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://cfewr2sb0nshm"
+path="res://.godot/imported/Стена дерево.obj-0e045ea8fc78b0c2ca848009482d473f.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Стена дерево.obj-0e045ea8fc78b0c2ca848009482d473f.mesh"]
+
+source_file="res://meshes/РСХБ АГРОДЖЕМ ГРАФИКА/Стены/Стена дерево.obj"
+dest_files=["res://.godot/imported/Стена дерево.obj-0e045ea8fc78b0c2ca848009482d473f.mesh", "res://.godot/imported/Стена дерево.obj-0e045ea8fc78b0c2ca848009482d473f.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

@@ -1,0 +1,25 @@
+[remap]
+
+importer="wavefront_obj"
+importer_version=1
+type="Mesh"
+uid="uid://daygnnm7d13tk"
+path="res://.godot/imported/Забор.obj-78b4ecbc968aaaf37ca309625b18cabd.mesh"
+
+[deps]
+
+files=["res://.godot/imported/Забор.obj-78b4ecbc968aaaf37ca309625b18cabd.mesh"]
+
+source_file="res://meshes/РСХБ АГРОДЖЕМ ГРАФИКА/Забор/Забор.obj"
+dest_files=["res://.godot/imported/Забор.obj-78b4ecbc968aaaf37ca309625b18cabd.mesh", "res://.godot/imported/Забор.obj-78b4ecbc968aaaf37ca309625b18cabd.mesh"]
+
+[params]
+
+generate_tangents=true
+generate_lods=true
+generate_shadow_mesh=true
+generate_lightmap_uv2=false
+generate_lightmap_uv2_texel_size=0.2
+scale_mesh=Vector3(1, 1, 1)
+offset_mesh=Vector3(0, 0, 0)
+force_disable_mesh_compression=false

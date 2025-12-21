@@ -1,8 +1,18 @@
-[gd_scene load_steps=17 format=3 uid="uid://1sv6yaxtlo3g"]
+[gd_scene load_steps=25 format=3 uid="uid://1sv6yaxtlo3g"]
 
-[ext_resource type="Script" uid="uid://ytb034poh0tc" path="res://camera_collision.gd" id="2_fj7yv"]
+[ext_resource type="Script" uid="uid://ytb034poh0tc" path="res://scripts/viewer.gd" id="2_fj7yv"]
 [ext_resource type="Shader" uid="uid://1281am6fe4pt" path="res://sky.tres" id="2_tlwt5"]
-[ext_resource type="ArrayMesh" uid="uid://pkj3xj8ckjxn" path="res://Тайл стены.obj" id="3_tlwt5"]
+[ext_resource type="Script" uid="uid://xmxnv8fmu7ki" path="res://scripts/camera_3d.gd" id="3_dwbse"]
+[ext_resource type="Script" uid="uid://14y0cw0pc0ve" path="res://scripts/grid_map.gd" id="4_aqk2v"]
+[ext_resource type="Script" uid="uid://cx61m7px04qsf" path="res://scripts/move_component.gd" id="4_gbfbk"]
+[ext_resource type="MeshLibrary" uid="uid://b7s044kcw1g4h" path="res://mesh_library.tres" id="4_pkg7o"]
+[ext_resource type="Script" uid="uid://broo73gdq5loj" path="res://scripts/input_mode_manager.gd" id="5_036b0"]
+[ext_resource type="Script" uid="uid://dti4gkgtwya10" path="res://scripts/build_component.gd" id="5_ioo17"]
+[ext_resource type="Script" uid="uid://b6it8aao7wd22" path="res://preview_component.gd" id="6_k3n1d"]
+[ext_resource type="Script" uid="uid://cynrj1i4kvf6j" path="res://ruler_component.gd" id="7_2o6r5"]
+[ext_resource type="Script" uid="uid://c8ti38q1hvk5u" path="res://scripts/item_database.gd" id="7_pkg7o"]
+[ext_resource type="Script" uid="uid://cm5how2av1cqe" path="res://controls_ui.gd" id="10_wse8f"]
+[ext_resource type="Script" uid="uid://s3fkv46rddqr" path="res://mesh_selector.gd" id="11_ic0uy"]
 
 [sub_resource type="Gradient" id="Gradient_aqk2v"]
 offsets = PackedFloat32Array(0, 0.53571427, 1)
@@ -42,24 +52,7 @@ color_ramp = SubResource("Gradient_fj7yv")
 albedo_texture = SubResource("NoiseTexture2D_aqk2v")
 
 [sub_resource type="SphereShape3D" id="SphereShape3D_fj7yv"]
-
-[sub_resource type="BoxMesh" id="BoxMesh_fj7yv"]
-
-[sub_resource type="MeshLibrary" id="MeshLibrary_tlwt5"]
-item/0/name = ""
-item/0/mesh = SubResource("BoxMesh_fj7yv")
-item/0/mesh_transform = Transform3D(0.5, 0, 0, 0, 0.5, 0, 0, 0, 3, 0, 0, 0)
-item/0/mesh_cast_shadow = 1
-item/0/shapes = []
-item/0/navigation_mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-item/0/navigation_layers = 1
-item/1/name = ""
-item/1/mesh = ExtResource("3_tlwt5")
-item/1/mesh_transform = Transform3D(0, 0, 1, 1, 0, 0, 0, 1, 0, 0, 0, -1.1)
-item/1/mesh_cast_shadow = 1
-item/1/shapes = []
-item/1/navigation_mesh_transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, 0)
-item/1/navigation_layers = 1
+radius = 1.0
 
 [node name="World" type="Node3D"]
 
@@ -71,25 +64,87 @@ use_collision = true
 size = Vector3(100, 0.2, 100)
 material = SubResource("StandardMaterial3D_wse8f")
 
-[node name="CameraCollision" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camera")]
+[node name="Viewer" type="CharacterBody3D" parent="." node_paths=PackedStringArray("camera", "move_component", "build_component", "input_mode_manager")]
 transform = Transform3D(1, 0, 0, 0, 0.9659259, 0.25881907, 0, -0.25881907, 0.9659258, 0, 4, 8.926956)
-collision_mask = 0
 motion_mode = 1
 script = ExtResource("2_fj7yv")
 camera = NodePath("Camera3D")
+move_component = NodePath("MoveComponent")
+build_component = NodePath("BuildComponent")
+input_mode_manager = NodePath("../InputModeManager")
 
-[node name="CollisionShape3D" type="CollisionShape3D" parent="CameraCollision"]
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Viewer"]
 shape = SubResource("SphereShape3D_fj7yv")
 debug_color = Color(0.9975975, 0, 0.1724742, 0.41960785)
 
-[node name="Camera3D" type="Camera3D" parent="CameraCollision"]
+[node name="Camera3D" type="Camera3D" parent="Viewer"]
+script = ExtResource("3_dwbse")
+
+[node name="MoveComponent" type="Node3D" parent="Viewer" node_paths=PackedStringArray("viewer")]
+script = ExtResource("4_gbfbk")
+viewer = NodePath("..")
+
+[node name="BuildComponent" type="Node3D" parent="Viewer" node_paths=PackedStringArray("viewer", "item_database", "grid_map")]
+script = ExtResource("5_ioo17")
+viewer = NodePath("..")
+item_database = NodePath("../../ItemDatabase")
+grid_map = NodePath("../../GridMap")
+
+[node name="PreviewComponent" type="Node3D" parent="Viewer" node_paths=PackedStringArray("viewer", "grid_map", "item_database", "input_mode_manager")]
+script = ExtResource("6_k3n1d")
+viewer = NodePath("..")
+grid_map = NodePath("../../GridMap")
+item_database = NodePath("../../ItemDatabase")
+input_mode_manager = NodePath("../../InputModeManager")
+
+[node name="RulerComponent" type="Node3D" parent="Viewer" node_paths=PackedStringArray("viewer", "input_mode_manager")]
+script = ExtResource("7_2o6r5")
+viewer = NodePath("..")
+input_mode_manager = NodePath("../../InputModeManager")
 
 [node name="DirectionalLight3D" type="DirectionalLight3D" parent="."]
 transform = Transform3D(1.1942173e-07, -1, 4.371139e-08, -0.49999997, -2.185569e-08, 0.86602545, -0.86602545, -1.2527795e-07, -0.49999997, -16, 5, -19)
 
 [node name="GridMap" type="GridMap" parent="."]
-mesh_library = SubResource("MeshLibrary_tlwt5")
-cell_size = Vector3(0.5, 3, 0.5)
-data = {
-"cells": PackedInt32Array(11, 14, 786432, 12, 14, 786432, 13, 14, 786432, 14, 14, 786432, 15, 14, 786432, 16, 14, 786432, 17, 14, 786432, 17, 13, 786432, 18, 13, 786432, 19, 13, 786432, 19, 14, 786432, 20, 14, 786432, 21, 14, 786432, 22, 14, 786432, 23, 14, 786432, 24, 14, 786432, 25, 14, 786432, 26, 14, 786432, 26, 13, 786432, 27, 14, 786432, 28, 14, 786432, 29, 14, 786432, 30, 14, 786432, 30, 13, 786432, 31, 14, 786432, 32, 14, 786432, 33, 14, 786432, 34, 14, 786432, 35, 15, 786432, 35, 16, 786432, 34, 17, 786432, 34, 18, 786432, 33, 18, 786432, 33, 19, 786432, 32, 19, 786432, 32, 20, 786432, 31, 21, 786432, 30, 21, 786432, 29, 22, 786432, 28, 22, 786432, 27, 23, 786432, 26, 23, 786432, 25, 23, 786432, 25, 24, 786432, 24, 24, 786432, 23, 24, 786432, 22, 24, 786432, 21, 24, 786432, 20, 24, 786432, 19, 24, 786432, 18, 24, 786432, 17, 24, 786432, 16, 24, 786432, 15, 24, 786432, 14, 24, 786432, 13, 24, 786432, 13, 23, 786432, 12, 23, 786432, 11, 22, 786432, 11, 21, 786432, 11, 20, 786432, 11, 19, 786432, 11, 18, 786432, 11, 17, 786432, 12, 17, 786432, 11, 16, 786432, 10, 15, 786432, 10, 14, 786432, 65518, 28, 786433, 65517, 28, 786433, 65516, 27, 786433, 65515, 27, 786433, 65515, 26, 786433, 65514, 26, 786433, 65514, 25, 786433, 65513, 25, 786433, 65513, 24, 786433, 65512, 24, 786433, 65511, 23, 786433, 65511, 22, 786433, 65510, 21, 786433, 65510, 20, 786433, 65511, 20, 786433, 65512, 20, 786433, 65514, 20, 786433, 65515, 20, 786433, 65517, 21, 786433, 65519, 21, 786433, 65520, 21, 786433, 65521, 22, 786433, 65522, 22, 786433, 65523, 22, 786433, 65524, 22, 786433, 65524, 23, 786433, 65525, 23, 786433, 65526, 24, 786433, 65528, 24, 786433, 65528, 25, 786433, 65529, 25, 786433, 65529, 26, 786433, 65530, 26, 786433, 65531, 26, 786433, 65531, 27, 786433, 65532, 28, 786433, 65532, 29, 786433, 65531, 29, 786433, 65530, 29, 786433, 65530, 30, 786433, 65529, 30, 786433, 65528, 30, 786433, 65527, 30, 786433, 65526, 30, 786433, 65525, 30, 786433, 65524, 30, 786433, 65523, 30, 786433, 65522, 30, 786433, 65521, 30, 786433, 65520, 30, 786433, 65519, 30, 786433, 65519, 29, 786433, 65518, 29, 786433)
-}
+mesh_library = ExtResource("4_pkg7o")
+cell_size = Vector3(0.5, 0.5, 0.5)
+script = ExtResource("4_aqk2v")
+
+[node name="InputModeManager" type="Node" parent="."]
+script = ExtResource("5_036b0")
+
+[node name="ItemDatabase" type="Node" parent="."]
+script = ExtResource("7_pkg7o")
+mesh_library = ExtResource("4_pkg7o")
+
+[node name="ControlsUI" type="CanvasLayer" parent="." node_paths=PackedStringArray("input_mode_manager")]
+script = ExtResource("10_wse8f")
+input_mode_manager = NodePath("../InputModeManager")
+
+[node name="ControlsLabel" type="Label" parent="ControlsUI"]
+offset_right = 40.0
+offset_bottom = 23.0
+
+[node name="MeshSelector" type="Control" parent="." node_paths=PackedStringArray("item_database", "button")]
+layout_mode = 3
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -40.0
+offset_bottom = 40.0
+grow_horizontal = 0
+script = ExtResource("11_ic0uy")
+item_database = NodePath("../ItemDatabase")
+button = NodePath("Button")
+
+[node name="Button" type="Button" parent="MeshSelector"]
+layout_mode = 1
+anchors_preset = 1
+anchor_left = 1.0
+anchor_right = 1.0
+offset_left = -71.0
+offset_bottom = 31.0
+grow_horizontal = 0
+text = "Selector"
+
+[node name="PopupMenu" type="PopupMenu" parent="MeshSelector"]
